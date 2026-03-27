@@ -1,0 +1,21 @@
+stages:
+
+  data_ingestion:
+    cmd: python src/components/data_ingestion.py
+    deps:
+      - src/pipeline/__init__.py
+      - yamlfiles/config.yaml
+    outs:
+      - artifacts/data_ingestion/brain_tumor_dataset
+
+  prepare_base_model:
+    cmd: python src/components/prepare_basemodel.py
+    deps:
+      - src/pipeline/__init__.py
+      - yamlfiles/param.yaml
+    params:
+      - yamlfiles/param.yaml: [IMAGE_SIZE, WEIGHTS, INCLUDETOP, CLASSICS, LEARNING_RATE]
+    outs:
+      - artifacts/prepare_base_model/vgg16.keras
+      - artifacts/prepare_base_model/update_base_mode.keras
+
