@@ -1,0 +1,49 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/components/data_ingestion.py
+    deps:
+    - path: src/pipeline/__init__.py
+      hash: md5
+      md5: e236532776353f4722333cb443bf42f6
+      size: 3057
+    - path: yamlfiles/config.yaml
+      hash: md5
+      md5: 0e238884f0c48d2d1b1961d34c084043
+      size: 459
+    outs:
+    - path: artifacts/data_ingestion/brain_tumor_dataset
+      hash: md5
+      md5: 8d77130541d5cd05acd22e04939d2ae2.dir
+      size: 8672762
+      nfiles: 253
+  prepare_base_model:
+    cmd: python src/components/prepare_basemodel.py
+    deps:
+    - path: src/pipeline/__init__.py
+      hash: md5
+      md5: e236532776353f4722333cb443bf42f6
+      size: 3057
+    - path: yamlfiles/param.yaml
+      hash: md5
+      md5: df70424ae8b5de6d3abd99397da62d20
+      size: 141
+    params:
+      yamlfiles/param.yaml:
+        CLASSICS: 2
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+        INCLUDETOP: false
+        LEARNING_RATE: 0.01
+        WEIGHTS: imagenet
+    outs:
+    - path: artifacts/prepare_base_model/update_base_mode.keras
+      hash: md5
+      md5: 7b9ca7d820cbd4ba0e33243bac15cca1
+      size: 84640462
+    - path: artifacts/prepare_base_model/vgg16.keras
+      hash: md5
+      md5: 2cce9d2a58c011ef7d8018ab886ce98f
+      size: 58931348
