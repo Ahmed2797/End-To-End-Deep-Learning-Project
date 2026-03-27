@@ -1,4 +1,4 @@
-from project.logger import logging 
+from src.logger.logging import logging 
 import sys 
 
 class CustomException(Exception):
