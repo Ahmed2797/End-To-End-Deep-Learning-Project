@@ -12,8 +12,8 @@ from box import ConfigBox
 from box.exceptions import BoxValueError
 from ensure import ensure_annotations
 
-from project.logger import logging
-from project.exception import CustomException
+from src.logger.logging import logging
+from src.exception import CustomException
 
 
 # ============================
