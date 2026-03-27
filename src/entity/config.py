@@ -17,3 +17,28 @@ class DataIngestionConfig:
     local_data_file: Path
     unzip_dir: Path
 
+
+@dataclass(frozen=True)
+class PrepareBasemodelConfig:
+    """
+    Dataclass for storing the configuration required to prepare the base model.
+
+    Attributes:
+        root_dir (Path): Base directory for base model artifacts.
+        base_model (Path): Path to the base model file.
+        update_base_model (Path): Path to the updated base model file.
+        param_image_size (list): List of image sizes for training.
+        param_batch_size (int): Batch size for training.
+        param_epochs (int): Number of epochs for training.
+    """
+    root_dir: Path
+    base_model: Path
+    update_base_model: Path 
+    param_image_size: list
+    param_batch_size: int
+    param_epochs: int 
+    param_learning_rate: float
+    param_classes: int
+    param_weight:str
+    param_include_top: bool
+
