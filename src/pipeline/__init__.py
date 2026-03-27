@@ -1,5 +1,5 @@
 from src.components.data_ingestion import DataIngestion 
-
+from src.components.prepare_basemodel import PrepareBaseModel
 
 from src.configeration import ConfigerationManager
 from src.exception import CustomException
@@ -47,6 +47,28 @@ class TrainingPipeline:
             logging.info(">>>>>>> Data Ingestion completed <<<<<<<<<")
         except Exception as e:
             raise CustomException(e, sys)
+    
+    def run_prepare_base_model(self):
+        """
+        Prepare the base model for training.
+        
+        Steps:
+        - Load pretrained model architecture and weights.
+        - Update top layers based on configuration.
+        
+        Raises:
+            CustomException: If any part of base model preparation fails.
+        """
+        try:
+            logging.info(">>>>>>> Prepare Base Model started <<<<<<<<<")
+            prepare_base_model_config = self.config.get_prepare_base_model_config()
+            prepare_base_model = PrepareBaseModel(prepare_base_model_config)
+            prepare_base_model.get_base_model()
+            prepare_base_model.update_base_model()
+            logging.info(">>>>>>> Prepare Base Model completed <<<<<<<<<")
+        except Exception as e:
+            raise CustomException(e, sys)
+
 
     def run(self):
         """
@@ -62,6 +84,7 @@ class TrainingPipeline:
         try:
             logging.info(">>>>>>> Training Pipeline started <<<<<<<<<")
             self.run_data_ingestion()
+            self.run_prepare_base_model()
             logging.info(">>>>>>> Training Pipeline completed <<<<<<<<<")
         except Exception as e:
             raise CustomException(e, sys)
