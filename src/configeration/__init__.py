@@ -1,5 +1,6 @@
 from src.entity.config import (DataIngestionConfig,
-                               PrepareBasemodelConfig)
+                               PrepareBasemodelConfig,
+                               PrepareCallbackConfig)
 from src.utils import read_yaml, create_directories
 from src.exception import CustomException
 from src.constants import *
@@ -104,6 +105,38 @@ class ConfigerationManager:
             return prepare_base_model_config
         except Exception as e:
             raise CustomException(e, sys)
-        
 
+
+    def get_prepare_callback_config(self) -> PrepareCallbackConfig:
+        """
+        Prepare and return callback configuration dataclass.
+
+        Steps:
+            - Read prepare_callbacks section from YAML.
+            - Extract directory for model checkpoint.
+            - Create TensorBoard log directory and checkpoint directory.
+            - Wrap them inside PrepareCallbackConfig dataclass.
+
+        Returns:
+            PrepareCallbackConfig: Contains formatted directory/file paths.
+        """
+        try:
+            config = self.config.prepare_callbacks
+
+            # Extract folder path from full checkpoint filepath
+            model_ckpt_dir = os.path.dirname(config.checkpoint_model_filepath)
+
+            # Ensure required directories exist
+            create_directories([
+                Path(model_ckpt_dir),
+                Path(config.tensorboard_root_log_dir)
+            ])
+
+            return PrepareCallbackConfig(
+                root_dir=Path(config.root_dir),
+                tensorboard_root_log_dir=Path(config.tensorboard_root_log_dir),
+                checkpoint_model_filepath=Path(config.checkpoint_model_filepath)
+            )
+        except Exception as e:
+            raise CustomException(e, sys)
 
