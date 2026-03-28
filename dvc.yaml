@@ -19,3 +19,13 @@ stages:
       - artifacts/prepare_base_model/vgg16.keras
       - artifacts/prepare_base_model/update_base_mode.keras
 
+  prepare_callbacks:
+    cmd: python src/components/callbacks.py
+    deps:
+      - src/pipeline/__init__.py
+      - src/entity/config.py
+      - yamlfiles/config.yaml
+    outs:
+      - artifacts/prepare_callbacks/tensorboard_log_dir
+      - artifacts/prepare_callbacks/checkpoint_
+    
