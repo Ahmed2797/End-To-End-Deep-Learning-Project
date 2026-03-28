@@ -5,12 +5,12 @@ stages:
     deps:
     - path: src/pipeline/__init__.py
       hash: md5
-      md5: e236532776353f4722333cb443bf42f6
-      size: 3057
+      md5: 07614e41b20b6d3e87df72119de82217
+      size: 3953
     - path: yamlfiles/config.yaml
       hash: md5
-      md5: 0e238884f0c48d2d1b1961d34c084043
-      size: 459
+      md5: b964dca19a2263c169f71f52ace1e755
+      size: 678
     outs:
     - path: artifacts/data_ingestion/brain_tumor_dataset
       hash: md5
@@ -22,8 +22,8 @@ stages:
     deps:
     - path: src/pipeline/__init__.py
       hash: md5
-      md5: e236532776353f4722333cb443bf42f6
-      size: 3057
+      md5: 07614e41b20b6d3e87df72119de82217
+      size: 3953
     - path: yamlfiles/param.yaml
       hash: md5
       md5: df70424ae8b5de6d3abd99397da62d20
@@ -41,9 +41,35 @@ stages:
     outs:
     - path: artifacts/prepare_base_model/update_base_mode.keras
       hash: md5
-      md5: 7b9ca7d820cbd4ba0e33243bac15cca1
+      md5: 8ef74ec03bf1e5d620ed921274553306
       size: 84640462
     - path: artifacts/prepare_base_model/vgg16.keras
       hash: md5
-      md5: 2cce9d2a58c011ef7d8018ab886ce98f
+      md5: 548aac204557d56872db2a77694d68a1
       size: 58931348
+  prepare_callbacks:
+    cmd: python src/components/callbacks.py
+    deps:
+    - path: src/entity/config.py
+      hash: md5
+      md5: 03d0d071e5aa58fee1970110e8a1a262
+      size: 1886
+    - path: src/pipeline/__init__.py
+      hash: md5
+      md5: 07614e41b20b6d3e87df72119de82217
+      size: 3953
+    - path: yamlfiles/config.yaml
+      hash: md5
+      md5: b964dca19a2263c169f71f52ace1e755
+      size: 678
+    outs:
+    - path: artifacts/prepare_callbacks/checkpoint_
+      hash: md5
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
+    - path: artifacts/prepare_callbacks/tensorboard_log_dir
+      hash: md5
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
