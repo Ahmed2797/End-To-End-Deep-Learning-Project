@@ -42,3 +42,18 @@ class PrepareBasemodelConfig:
     param_weight:str
     param_include_top: bool
 
+
+@dataclass(frozen=True)
+class PrepareCallbackConfig:
+    """
+    Dataclass for storing the configuration required to create callbacks.
+
+    Attributes:
+        root_dir (Path): Base directory for callback-related artifacts.
+        tensorboard_root_log_dir (Path): Directory where TensorBoard logs will be saved.
+        checkpoint_model_filepath (Path): Full filepath where the model checkpoint will be stored.
+    """
+    root_dir: Path
+    tensorboard_root_log_dir: Path
+    checkpoint_model_filepath: Path
+
