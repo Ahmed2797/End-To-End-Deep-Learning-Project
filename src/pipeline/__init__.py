@@ -1,5 +1,6 @@
 from src.components.data_ingestion import DataIngestion 
 from src.components.prepare_basemodel import PrepareBaseModel
+from src.components.callbacks import CallBacks
 
 from src.configeration import ConfigerationManager
 from src.exception import CustomException
@@ -68,6 +69,28 @@ class TrainingPipeline:
             logging.info(">>>>>>> Prepare Base Model completed <<<<<<<<<")
         except Exception as e:
             raise CustomException(e, sys)
+        
+    def run_prepare_callbacks(self):
+        """
+        Create required Keras callbacks such as:
+        - TensorBoard callback
+        - ModelCheckpoint callback
+        
+        Returns:
+            list: List of prepared callbacks.
+            
+        Raises:
+            CustomException: If callback preparation fails.
+        """
+        try:
+            logging.info(">>>>>>> Prepare Callback started <<<<<<<<<")
+            callback_config = self.config.get_prepare_callback_config()
+            callback = CallBacks(callback_config)
+            callback_list = callback.get_tb_ckpt_callbacks()
+            logging.info(">>>>>>> Prepare Callback completed <<<<<<<<<")
+            return callback_list
+        except Exception as e:
+            raise CustomException(e, sys)
 
 
     def run(self):
@@ -85,6 +108,7 @@ class TrainingPipeline:
             logging.info(">>>>>>> Training Pipeline started <<<<<<<<<")
             self.run_data_ingestion()
             self.run_prepare_base_model()
+            callback_list = self.run_prepare_callbacks()
             logging.info(">>>>>>> Training Pipeline completed <<<<<<<<<")
         except Exception as e:
             raise CustomException(e, sys)
