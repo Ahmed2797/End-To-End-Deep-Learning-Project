@@ -1,6 +1,7 @@
 from src.components.data_ingestion import DataIngestion 
 from src.components.prepare_basemodel import PrepareBaseModel
 from src.components.callbacks import CallBacks
+from src.components.model_train import Training
 
 from src.configeration import ConfigerationManager
 from src.exception import CustomException
@@ -86,9 +87,41 @@ class TrainingPipeline:
             logging.info(">>>>>>> Prepare Callback started <<<<<<<<<")
             callback_config = self.config.get_prepare_callback_config()
             callback = CallBacks(callback_config)
-            callback_list = callback.get_tb_ckpt_callbacks()
+            callback_list = callback.get_callbacks()
             logging.info(">>>>>>> Prepare Callback completed <<<<<<<<<")
             return callback_list
+        except Exception as e:
+            raise CustomException(e, sys)
+        
+    def run_model_training(self):
+        """
+        Train the model using:
+        - Loaded base model
+        - Training & validation generators
+        - Prepared callbacks
+        
+        Raises:
+            CustomException: If model training fails.
+        """
+        try:
+            logging.info(">>>>>>> Model Training started <<<<<<<<<")
+
+            model_training_config = self.config.get_training_config()
+            model_training = Training(model_training_config)
+
+            # Load updated base model
+            model_training.get_base_model()
+
+            # Prepare train/validation generators
+            model_training.train_valid_generator()
+
+            # Prepare callbacks
+            callbacks_list = self.run_prepare_callbacks()
+
+            # Train the model
+            model_training.train(callbacks=callbacks_list)
+
+            logging.info(">>>>>>> Model Training completed <<<<<<<<<")
         except Exception as e:
             raise CustomException(e, sys)
 
@@ -108,7 +141,8 @@ class TrainingPipeline:
             logging.info(">>>>>>> Training Pipeline started <<<<<<<<<")
             self.run_data_ingestion()
             self.run_prepare_base_model()
-            callback_list = self.run_prepare_callbacks()
+            # callback_list = self.run_prepare_callbacks()
+            self.run_model_training()
             logging.info(">>>>>>> Training Pipeline completed <<<<<<<<<")
         except Exception as e:
             raise CustomException(e, sys)
