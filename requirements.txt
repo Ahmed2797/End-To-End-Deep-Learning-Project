@@ -23,4 +23,13 @@ joblib
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 
+# # Computer Vision
+# ultralytics==8.3.227
+# opencv-python==4.12.0.88
+# opencv-python-headless==4.10.0.84
+# easyocr==1.7.2
+# supervision==0.27.0
+# ipython==9.8.0
+# numpy==2.2.6
+
 -e .
