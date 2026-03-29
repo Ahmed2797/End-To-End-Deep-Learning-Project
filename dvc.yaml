@@ -29,3 +29,16 @@ stages:
       - artifacts/prepare_callbacks/tensorboard_log_dir
       - artifacts/prepare_callbacks/checkpoint_
     
+  model_training:
+    cmd: python src/components/model_training.py
+    deps:
+      - src/pipeline/__init__.py
+      - src/components/callbacks.py
+      - yamlfiles/config.yaml
+      - artifacts/prepare_base_model/update_base_mode.keras
+      - artifacts/data_ingestion/archive/brain_tumor_dataset
+    params:
+      - yamlfile/param.yaml: [LEARNING_RATE, BATCH_SIZE, EPOCHS, AUGMENTATION]
+    outs:
+      - artifacts/training/model.keras
+ 
