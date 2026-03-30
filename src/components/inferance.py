@@ -86,7 +86,7 @@ class Prediction_Pipeline:
 if __name__ == "__main__":
     # Demonstration of the prediction pipeline
     try:
-        pipeline = Prediction_Pipeline(model_path="chest-xray/best_chest_xray_model.keras")
+        pipeline = Prediction_Pipeline(model_path="final_model/model.keras")
         test_img_path = "artifacts/data_ingestion/brain_tumor_dataset/yes/Y254.jpg" 
         
         orig, pred, result = pipeline.predict(test_img_path)

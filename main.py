@@ -13,7 +13,7 @@ if __name__ == "__main__":
         # print(f"Result:{result}")
 
         # Visualization setup
-        plt.figure(figsize=(12, 8))
+        plt.figure(figsize=(16, 8))
 
         plt.subplot(2, 2, 1)
         plt.title("Original Tumar X-ray", fontsize=8)
