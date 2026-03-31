@@ -2,6 +2,7 @@ from src.components.data_ingestion import DataIngestion
 from src.components.prepare_basemodel import PrepareBaseModel
 from src.components.callbacks import CallBacks
 from src.components.model_train import Training
+from src.components.model_evalution import Evaluation
 
 from src.configeration import ConfigerationManager
 from src.exception import CustomException
@@ -125,6 +126,24 @@ class TrainingPipeline:
         except Exception as e:
             raise CustomException(e, sys)
 
+    def run_model_evaluation(self):
+        """
+        Evaluate the trained model on the test dataset.
+        
+        Raises:
+            CustomException: If evaluation fails.
+        """
+        try:
+            logging.info(">>>>>>> Model Evaluation started <<<<<<<<<")
+            model_evaluation_config = self.config.get_model_evaluation_config()
+            model_evaluation = Evaluation(model_evaluation_config)
+            # model_evaluation.evalution()
+            model_evaluation.run_evaluation_pipeline()
+            logging.info(">>>>>>> Model Evaluation completed <<<<<<<<<")
+        except Exception as e:
+            raise CustomException(e, sys)
+
+
 
     def run(self):
         """
@@ -143,6 +162,7 @@ class TrainingPipeline:
             self.run_prepare_base_model()
             # callback_list = self.run_prepare_callbacks()
             self.run_model_training()
+            self.run_model_evaluation()
             logging.info(">>>>>>> Training Pipeline completed <<<<<<<<<")
         except Exception as e:
             raise CustomException(e, sys)

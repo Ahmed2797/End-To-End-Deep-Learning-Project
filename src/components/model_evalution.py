@@ -10,11 +10,12 @@ import tensorflow as tf
 import mlflow
 from src.entity.config import ModelEvaluationConfig
 from src.utils import save_json
+from src.configeration import ConfigerationManager
+from src.exception import CustomException
+from src.logger.logging import logging
 
-# import dagshub
-# dagshub.init(repo_owner='Ahmed2797', repo_name='Brain-Tumar-Detection-VGG16-YOLO-SAM', mlflow=True)
-
-
+import dagshub
+dagshub.init(repo_owner='Ahmed2797', repo_name='End-To-End-Deep-Learning-Project', mlflow=True)
 
 
 class Evaluation:
@@ -56,7 +57,7 @@ class Evaluation:
     def evalution(self):
         """Evaluate the model and return loss, accuracy as a dictionary."""
         self._valid_generator()
-        model = self.load_model(Path("artifacts/training/model.h5"))
+        model = self.load_model(Path("final_model/model.keras"))
         loss, accuracy = model.evaluate(self.valid_generator)
 
         return {
@@ -94,26 +95,49 @@ class Evaluation:
         return results
 
     # ---------------------------------------------------------------------
-    def log_mlflow(self):
+    def log_mlflow(self,results=None):
         """Log metrics and model to MLflow."""
-        os.environ["MLFLOW_TRACKING_URI"] = self.config.mlflow_tracking_uri
-        os.environ["MLFLOW_TRACKING_USERNAME"] = "Ahmed2797"
-        os.environ["MLFLOW_TRACKING_PASSWORD"] = "466cd6e40b4463c19cee521d93d34f35fb915367"
-
+        
         mlflow.set_tracking_uri(self.config.mlflow_tracking_uri)
         mlflow.set_experiment(self.config.mlflow_experiment_name)
-
-        results = self.evalution()
 
         with mlflow.start_run():
             mlflow.log_params(self.config.all_params)
             mlflow.log_metric("val_loss", results["loss"])
             mlflow.log_metric("val_accuracy", results["accuracy"])
 
-            model = self.load_model(Path("artifacts/training/model.h5"))
+            model = self.load_model(Path("final_model/model.keras"))
 
             export_dir = Path("artifacts/training/model_export")
             export_dir.mkdir(parents=True, exist_ok=True)
             model.export(export_dir)
 
             mlflow.log_artifacts(str(export_dir), artifact_path="model")
+
+    
+    def run_evaluation_pipeline(self):
+        """Orchestrate the entire evaluation process."""
+        results = self.evalution()
+        
+        # Save JSON/YAML reports
+        save_json(path=Path(self.config.scores_file_dir) / self.config.scores_file, data=results)
+        
+        # Log to MLflow
+        if self.config.mlflow_tracking_uri:
+            self.log_mlflow(results=results)
+        else:
+            logging.warning("MLflow tracking URI not provided. Skipping MLflow logging.")
+
+
+
+
+if __name__ == "__main__":
+    try:
+        config_manager = ConfigerationManager()
+        model_evaluation_config = config_manager.get_model_evaluation_config()
+
+        evaluator = Evaluation(config=model_evaluation_config)
+        evaluator.run_evaluation_pipeline()
+    except Exception as e:
+        raise CustomException(e, sys)
+    
