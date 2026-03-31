@@ -3,6 +3,7 @@ logs
 final_model
 models
 extracted_images
+uploads
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
