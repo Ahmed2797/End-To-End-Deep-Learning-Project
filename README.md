@@ -8,6 +8,7 @@
 
 ## 🚀 Project Overview
 
+![AI](experiment-notebook/dl-rag.png)
 ![AI](experiment-notebook/webapp.png)
 
 This project is a **production-ready AI-powered Medical Assistant** that combines:
